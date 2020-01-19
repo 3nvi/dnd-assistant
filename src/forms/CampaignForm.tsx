@@ -1,7 +1,19 @@
 import React from 'react';
 import { Formik, Field, FieldProps, Form } from 'formik';
-import { FormControl, FormErrorMessage, FormLabel, Input, Stack, Box } from '@chakra-ui/core/dist';
+import { Select } from '@chakra-ui/core/dist';
+import {
+  FormControl,
+  FormErrorMessage,
+  FormLabel,
+  Input,
+  Stack,
+  Box,
+  useToast,
+} from '@chakra-ui/core/dist';
 import * as Yup from 'yup';
+import { useQuery } from '@apollo/client';
+import { Campaign } from 'src/graphql/schema';
+import { LIST_USERS, ListUsers } from 'src/graphql/user';
 
 const CampaignFormSchema = Yup.object().shape({
   name: Yup.string()
@@ -19,6 +31,22 @@ const campaignFormInitialValues = {
 };
 
 const CampaignForm: React.FC = () => {
+  const toast = useToast();
+  const { data, error } = useQuery<ListUsers>(LIST_USERS);
+
+  React.useEffect(() => {
+    if (error) {
+      toast({
+        title: 'Failed to fetch user options',
+        description: "We couldn't retrieve the DnD assistant users from our database",
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      });
+    }
+  }, [error]);
+
+  const users = data?.users || [];
   return (
     <Formik<CampaignFormValues>
       onSubmit={alert}
@@ -44,7 +72,14 @@ const CampaignForm: React.FC = () => {
                 {({ field, meta }: FieldProps<string>) => (
                   <FormControl isInvalid={!!meta.error && meta.touched} isRequired>
                     <FormLabel htmlFor={field.name}>DM</FormLabel>
-                    <Input {...field} id={field.name} placeholder="i.e. Stefanos" size="lg" />
+                    <Select {...field} placeholder="Who's your dungeon master...">
+                      {users.map(user => (
+                        <option value={user._id}>{user.name}</option>
+                      ))}
+
+                      <option value="option2">Option 2</option>
+                      <option value="option3">Option 3</option>
+                    </Select>
                     <FormErrorMessage>{meta.error}</FormErrorMessage>
                   </FormControl>
                 )}

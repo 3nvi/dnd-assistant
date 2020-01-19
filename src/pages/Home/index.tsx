@@ -1,15 +1,15 @@
 import React from 'react';
-import useAuth from 'src/hooks/useAuth';
 import SpellGroup from 'src/components/SpellGroup';
 import { Link } from 'react-router-dom';
 import { Box, Button } from '@chakra-ui/core/dist';
 import urls from 'src/urls';
+import Campaigns from './subcomponents/Campaigns';
 
 const HomePage: React.FC = () => {
-  const { user } = useAuth();
   return (
     <Box>
       <SpellGroup />
+      <Campaigns />
 
       <Button
         as={Link}

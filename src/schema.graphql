@@ -1,0 +1,42 @@
+# This file was generated based on ".graphqlconfig". Do not edit manually.
+
+schema {
+    query: Query
+}
+
+interface MutationResponse {
+    code: String!
+    message: String!
+    success: Boolean!
+}
+
+type Campaign {
+    _id: ID!
+    dungeonMaster: User!
+    name: String!
+    players: [User!]!
+}
+
+type Query {
+    campaigns: [Campaign]!
+    users: [User]!
+}
+
+type User {
+    _id: ID!
+    email: String!
+    image: String
+    name: String!
+}
+
+enum CacheControlScope {
+    PRIVATE
+    PUBLIC
+}
+
+
+"Date scalar type"
+scalar Date
+
+"The `Upload` scalar type represents a file upload."
+scalar Upload

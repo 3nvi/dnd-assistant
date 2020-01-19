@@ -2,7 +2,7 @@ import { ApolloClient, HttpLink, InMemoryCache, ApolloLink } from '@apollo/clien
 import { setContext } from 'apollo-link-context';
 
 const httpLink = new HttpLink({
-  uri: '/graphql',
+  uri: 'http://localhost:4000/',
 });
 
 // We need a function to retrieve the access token. The auth client that returns them lives in the

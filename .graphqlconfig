@@ -1,0 +1,15 @@
+{
+  "name": "DnD Assistant server",
+  "schemaPath": "./src/schema.graphql",
+  "extensions": {
+    "endpoints": {
+      "dnd-assistant-apollo-server": {
+        "url": "http://localhost:4000/graphql",
+        "headers": {
+          "user-agent": "JS GraphQL"
+        },
+        "introspect": true
+      }
+    }
+  }
+}

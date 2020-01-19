@@ -62,9 +62,9 @@ const AuthProvider: React.FC = ({ children }) => {
         }
       } else {
         isAuthenticatedValue = await auth0Client.current.isAuthenticated();
-        if (isAuthenticatedValue) {
-          setAuthenticated(isAuthenticatedValue);
+        setAuthenticated(isAuthenticatedValue);
 
+        if (isAuthenticatedValue) {
           userValue = await auth0Client.current.getUser();
           setUser(userValue);
         }

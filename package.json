@@ -11,7 +11,7 @@
     "dnd",
     "battle-helper"
   ],
-  "author": "Quan Pham",
+  "author": "Aggelos Arvanitakis",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/3nvi/dnd-assistant/issues"
@@ -20,7 +20,7 @@
   "dependencies": {
     "@apollo/client": "^3.0.0-beta.14",
     "@auth0/auth0-spa-js": "1.3.2",
-    "@chakra-ui/core": "^0.5.0",
+    "@chakra-ui/core": "^0.5.2",
     "@emotion/core": "^10.0.27",
     "@emotion/styled": "^10.0.27",
     "@testing-library/jest-dom": "^4.2.4",
@@ -51,6 +51,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
+    "graphql-codegen": "graphql-codegen",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
@@ -92,6 +93,8 @@
     ]
   },
   "devDependencies": {
+    "@graphql-codegen/cli": "^1.11.2",
+    "@graphql-codegen/typescript": "^1.11.2",
     "@types/react-router-dom": "^5.1.3",
     "@types/react-select": "^3.0.8",
     "@types/yup": "^0.26.27",
