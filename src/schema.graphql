@@ -2,6 +2,7 @@
 
 schema {
     query: Query
+    mutation: Mutation
 }
 
 interface MutationResponse {
@@ -15,6 +16,17 @@ type Campaign {
     dungeonMaster: User!
     name: String!
     players: [User!]!
+}
+
+type CampaignCreationResponse implements MutationResponse {
+    campaign: Campaign
+    code: String!
+    message: String!
+    success: Boolean!
+}
+
+type Mutation {
+    createCampaign(dungeonMaster: String!, name: String!, players: String!): CampaignCreationResponse!
 }
 
 type Query {

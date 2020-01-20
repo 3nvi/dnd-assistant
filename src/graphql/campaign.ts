@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client';
-import { Campaign } from './schema';
+import { Campaign, MutationResponse } from './schema';
 
-export const CAMPAIGN_SUMMARY_FRAGMENT = gql`
+const CAMPAIGN_SUMMARY_FRAGMENT = gql`
   fragment CampaignSummary on Campaign {
     _id
     name
@@ -20,8 +20,25 @@ export const LIST_CAMPAIGNS = gql`
       ...CampaignSummary
     }
   }
+  ${CAMPAIGN_SUMMARY_FRAGMENT}
 `;
-
 export interface ListCampaigns {
   campaigns: Campaign[];
 }
+
+export const CREATE_CAMPAIGN = gql`
+  mutation CreateCampaign($name: String!, $dungeonMaster: String!, $players: String!) {
+    createCampaign(name: $name, dungeonMaster: $dungeonMaster, players: $players) {
+      campaign {
+        ...CampaignSummary
+      }
+    }
+  }
+  ${CAMPAIGN_SUMMARY_FRAGMENT}
+`;
+export type CreateCampaign = MutationResponse & { campaign: Campaign };
+export type CreateCampaignInput = {
+  name: string;
+  dungeonMaster: string;
+  players: string;
+};

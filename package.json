@@ -56,10 +56,7 @@
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
-    "extends": "react-app",
-    "rules": {
-      "react-hooks/exhaustive-deps": "off"
-    }
+    "extends": "react-app"
   },
   "prettier": {
     "trailingComma": "es5",

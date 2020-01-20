@@ -16,6 +16,7 @@ export const LIST_USERS = gql`
       ...UserSummary
     }
   }
+  ${USER_SUMMARY_FRAGMENT}
 `;
 
 export interface ListUsers {

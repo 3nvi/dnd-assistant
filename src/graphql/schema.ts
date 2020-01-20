@@ -23,6 +23,25 @@ export type Campaign = {
   players: Array<User>;
 };
 
+export type CampaignCreationResponse = MutationResponse & {
+  __typename?: 'CampaignCreationResponse';
+  code: Scalars['String'];
+  success: Scalars['Boolean'];
+  message: Scalars['String'];
+  campaign?: Maybe<Campaign>;
+};
+
+export type Mutation = {
+  __typename?: 'Mutation';
+  createCampaign: CampaignCreationResponse;
+};
+
+export type MutationCreateCampaignArgs = {
+  name: Scalars['String'];
+  dungeonMaster: Scalars['String'];
+  players: Scalars['String'];
+};
+
 export type MutationResponse = {
   code: Scalars['String'];
   success: Scalars['Boolean'];
@@ -41,4 +60,5 @@ export type User = {
   name: Scalars['String'];
   email: Scalars['String'];
   image?: Maybe<Scalars['String']>;
+  campaigns: Array<Maybe<Campaign>>;
 };
