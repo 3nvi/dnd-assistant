@@ -39,7 +39,7 @@ export type Mutation = {
 export type MutationCreateCampaignArgs = {
   name: Scalars['String'];
   dungeonMaster: Scalars['String'];
-  players: Scalars['String'];
+  players: Array<Maybe<Scalars['String']>>;
 };
 
 export type MutationResponse = {

@@ -1,51 +1,55 @@
 # This file was generated based on ".graphqlconfig". Do not edit manually.
 
 schema {
-    query: Query
-    mutation: Mutation
+  query: Query
+  mutation: Mutation
 }
 
 interface MutationResponse {
-    code: String!
-    message: String!
-    success: Boolean!
+  code: String!
+  message: String!
+  success: Boolean!
 }
 
 type Campaign {
-    _id: ID!
-    dungeonMaster: User!
-    name: String!
-    players: [User!]!
+  _id: ID!
+  dungeonMaster: User!
+  name: String!
+  players: [User!]!
 }
 
 type CampaignCreationResponse implements MutationResponse {
-    campaign: Campaign
-    code: String!
-    message: String!
-    success: Boolean!
+  campaign: Campaign
+  code: String!
+  message: String!
+  success: Boolean!
 }
 
 type Mutation {
-    createCampaign(dungeonMaster: String!, name: String!, players: String!): CampaignCreationResponse!
+  createCampaign(
+    dungeonMaster: String!
+    name: String!
+    players: [String]!
+  ): CampaignCreationResponse!
 }
 
 type Query {
-    campaigns: [Campaign]!
-    users: [User]!
+  campaigns: [Campaign]!
+  users: [User]!
 }
 
 type User {
-    _id: ID!
-    email: String!
-    image: String
-    name: String!
+  _id: ID!
+  campaigns: [Campaign]!
+  email: String!
+  image: String
+  name: String!
 }
 
 enum CacheControlScope {
-    PRIVATE
-    PUBLIC
+  PRIVATE
+  PUBLIC
 }
-
 
 "Date scalar type"
 scalar Date

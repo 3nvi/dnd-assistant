@@ -27,7 +27,7 @@ export interface ListCampaigns {
 }
 
 export const CREATE_CAMPAIGN = gql`
-  mutation CreateCampaign($name: String!, $dungeonMaster: String!, $players: String!) {
+  mutation CreateCampaign($name: String!, $dungeonMaster: String!, $players: [String]!) {
     createCampaign(name: $name, dungeonMaster: $dungeonMaster, players: $players) {
       campaign {
         ...CampaignSummary
