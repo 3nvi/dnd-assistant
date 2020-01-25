@@ -40,5 +40,5 @@ export type CreateCampaign = MutationResponse & { campaign: Campaign };
 export type CreateCampaignInput = {
   name: string;
   dungeonMaster: string;
-  players: string;
+  players: string[];
 };

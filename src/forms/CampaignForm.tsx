@@ -1,6 +1,6 @@
 import React from 'react';
 import { Formik, Field, FieldProps, Form } from 'formik';
-import { Select } from '@chakra-ui/core/dist';
+import Select from 'src/components/Select';
 import {
   FormControl,
   FormErrorMessage,
@@ -23,19 +23,21 @@ const CampaignFormSchema = Yup.object().shape({
     .max(50, "Name's too long!")
     .required('You must specify a name'),
   dungeonMaster: Yup.string().required('You must specify a DM'),
-  players: Yup.string().required('You must some players'),
+  players: Yup.array()
+    .of(Yup.string())
+    .required('You must some players'),
 });
 
 interface CampaignFormValues {
   name: string;
   dungeonMaster: User['_id'];
-  players: User['_id'];
+  players: User['_id'][];
 }
 
 const campaignFormInitialValues = {
   name: '',
   dungeonMaster: '',
-  players: '',
+  players: [],
 };
 
 const CampaignForm: React.FC = () => {
@@ -78,6 +80,11 @@ const CampaignForm: React.FC = () => {
   }, [createCampaignData]);
 
   const users = listUsersData?.users || [];
+  const userOptions = React.useMemo(
+    () => users.map(user => ({ label: user.name, value: user._id })),
+    [users]
+  );
+
   return (
     <Formik<CampaignFormValues>
       onSubmit={async values =>
@@ -88,7 +95,7 @@ const CampaignForm: React.FC = () => {
       initialValues={campaignFormInitialValues}
       validationSchema={CampaignFormSchema}
     >
-      {({ isSubmitting, isValid, dirty }) => (
+      {({ isSubmitting, isValid, dirty, values, setFieldValue }) => (
         <Form>
           <Stack spacing={5} p={5}>
             <Box>
@@ -107,13 +114,13 @@ const CampaignForm: React.FC = () => {
                 {({ field, meta }: FieldProps<string>) => (
                   <FormControl isInvalid={!!meta.error && meta.touched} isRequired>
                     <FormLabel htmlFor={field.name}>DM</FormLabel>
-                    <Select {...field} placeholder="Who's your dungeon master...">
-                      {users.map(user => (
-                        <option value={user._id} key={user._id}>
-                          {user.name}
-                        </option>
-                      ))}
-                    </Select>
+                    <Select
+                      {...field}
+                      onChange={value => setFieldValue(field.name, value)}
+                      filterOption={o => !values.players.includes(o.value)}
+                      options={userOptions}
+                      placeholder="Who's your dungeon master..."
+                    />
                     <FormErrorMessage>{meta.error}</FormErrorMessage>
                   </FormControl>
                 )}
@@ -124,13 +131,14 @@ const CampaignForm: React.FC = () => {
                 {({ field, meta }: FieldProps<string>) => (
                   <FormControl isInvalid={!!meta.error && meta.touched} isRequired>
                     <FormLabel htmlFor={field.name}>Players</FormLabel>
-                    <Select {...field} placeholder="Add some players...">
-                      {users.map(user => (
-                        <option value={user._id} key={user._id}>
-                          {user.name}
-                        </option>
-                      ))}
-                    </Select>
+                    <Select
+                      {...field}
+                      onChange={value => setFieldValue(field.name, value)}
+                      isMulti
+                      filterOption={option => option.value !== values.dungeonMaster}
+                      options={userOptions}
+                      placeholder="Add some players..."
+                    />
                     <FormErrorMessage>{meta.error}</FormErrorMessage>
                   </FormControl>
                 )}
