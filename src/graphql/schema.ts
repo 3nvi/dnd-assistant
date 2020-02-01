@@ -21,6 +21,8 @@ export type Campaign = {
   name: Scalars['String'];
   dungeonMaster: User;
   players: Array<User>;
+  createdAt: Scalars['Date'];
+  updatedAt: Scalars['Date'];
 };
 
 export type CampaignCreationResponse = MutationResponse & {
@@ -31,15 +33,27 @@ export type CampaignCreationResponse = MutationResponse & {
   campaign?: Maybe<Campaign>;
 };
 
+export type CampaignDeletionResponse = MutationResponse & {
+  __typename?: 'CampaignDeletionResponse';
+  code: Scalars['String'];
+  success: Scalars['Boolean'];
+  message: Scalars['String'];
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   createCampaign: CampaignCreationResponse;
+  deleteCampaign: CampaignDeletionResponse;
 };
 
 export type MutationCreateCampaignArgs = {
   name: Scalars['String'];
   dungeonMaster: Scalars['String'];
   players: Array<Maybe<Scalars['String']>>;
+};
+
+export type MutationDeleteCampaignArgs = {
+  id: Scalars['ID'];
 };
 
 export type MutationResponse = {
@@ -50,8 +64,8 @@ export type MutationResponse = {
 
 export type Query = {
   __typename?: 'Query';
-  campaigns: Array<Maybe<Campaign>>;
-  users: Array<Maybe<User>>;
+  campaigns: Array<Campaign>;
+  users: Array<User>;
 };
 
 export type User = {

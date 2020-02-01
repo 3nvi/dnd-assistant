@@ -13,13 +13,21 @@ interface MutationResponse {
 
 type Campaign {
   _id: ID!
+  createdAt: Date!
   dungeonMaster: User!
   name: String!
   players: [User!]!
+  updatedAt: Date!
 }
 
 type CampaignCreationResponse implements MutationResponse {
   campaign: Campaign
+  code: String!
+  message: String!
+  success: Boolean!
+}
+
+type CampaignDeletionResponse implements MutationResponse {
   code: String!
   message: String!
   success: Boolean!
@@ -31,11 +39,12 @@ type Mutation {
     name: String!
     players: [String]!
   ): CampaignCreationResponse!
+  deleteCampaign(id: ID!): CampaignDeletionResponse!
 }
 
 type Query {
-  campaigns: [Campaign]!
-  users: [User]!
+  campaigns: [Campaign!]!
+  users: [User!]!
 }
 
 type User {

@@ -33,6 +33,7 @@
     "@types/react-dom": "^16.9.0",
     "apollo-link-context": "^1.0.19",
     "apollo-link-error": "^1.1.12",
+    "dayjs": "^1.8.19",
     "emotion-theming": "^10.0.27",
     "formik": "^2.0.8",
     "graphql": "^14.5.8",

@@ -12,10 +12,32 @@ import {
   useToast,
 } from '@chakra-ui/core/dist';
 import * as Yup from 'yup';
-import { useQuery, useMutation } from '@apollo/client';
-import { LIST_USERS, ListUsers } from 'src/graphql/user';
-import { CreateCampaign, CreateCampaignInput, CREATE_CAMPAIGN } from 'src/graphql/campaign';
-import { User } from '../graphql/schema';
+import { useQuery, useMutation, gql } from '@apollo/client';
+import { CAMPAIGN_SUMMARY_FRAGMENT } from 'src/graphql/campaign';
+import { USER_SUMMARY_FRAGMENT } from 'src/graphql/user';
+import { MutationCreateCampaignArgs, CampaignCreationResponse, Query } from 'src/graphql/schema';
+import { useHistory } from 'react-router-dom';
+import urls from 'src/urls';
+
+export const LIST_USERS = gql`
+  query ListUsers {
+    users {
+      ...UserSummary
+    }
+  }
+  ${USER_SUMMARY_FRAGMENT}
+`;
+
+export const CREATE_CAMPAIGN = gql`
+  mutation CreateCampaign($name: String!, $dungeonMaster: String!, $players: [String]!) {
+    createCampaign(name: $name, dungeonMaster: $dungeonMaster, players: $players) {
+      campaign {
+        ...CampaignSummary
+      }
+    }
+  }
+  ${CAMPAIGN_SUMMARY_FRAGMENT}
+`;
 
 const CampaignFormSchema = Yup.object().shape({
   name: Yup.string()
@@ -28,12 +50,6 @@ const CampaignFormSchema = Yup.object().shape({
     .required('You must some players'),
 });
 
-interface CampaignFormValues {
-  name: string;
-  dungeonMaster: User['_id'];
-  players: User['_id'][];
-}
-
 const campaignFormInitialValues = {
   name: '',
   dungeonMaster: '',
@@ -42,10 +58,11 @@ const campaignFormInitialValues = {
 
 const CampaignForm: React.FC = () => {
   const toast = useToast();
-  const { data: listUsersData, error: listUsersError } = useQuery<ListUsers>(LIST_USERS);
+  const history = useHistory();
+  const { data: listUsersData, error: listUsersError } = useQuery<Pick<Query, 'users'>>(LIST_USERS);
   const [createCampaign, { data: createCampaignData, error: createCampaignError }] = useMutation<
-    CreateCampaign,
-    CreateCampaignInput
+    { createCampaign: CampaignCreationResponse },
+    MutationCreateCampaignArgs
   >(CREATE_CAMPAIGN);
 
   React.useEffect(() => {
@@ -62,7 +79,6 @@ const CampaignForm: React.FC = () => {
 
   React.useEffect(() => {
     if (createCampaignError) {
-      console.log(createCampaignError);
       toast({
         title: 'Failed to create campaign',
         description: "We couldn't retrieve the DnD assistant users from our database",
@@ -75,7 +91,7 @@ const CampaignForm: React.FC = () => {
 
   React.useEffect(() => {
     if (createCampaignData) {
-      alert('campaign created!');
+      history.push(urls.campaigns.list());
     }
   }, [createCampaignData]);
 
@@ -86,7 +102,7 @@ const CampaignForm: React.FC = () => {
   );
 
   return (
-    <Formik<CampaignFormValues>
+    <Formik<MutationCreateCampaignArgs>
       onSubmit={async values =>
         createCampaign({
           variables: values,
@@ -97,7 +113,7 @@ const CampaignForm: React.FC = () => {
     >
       {({ isSubmitting, isValid, dirty, values, setFieldValue }) => (
         <Form>
-          <Stack spacing={5} p={5}>
+          <Stack spacing={5} py={5}>
             <Box>
               <Field name="name">
                 {({ field, meta }: FieldProps<string>) => (
