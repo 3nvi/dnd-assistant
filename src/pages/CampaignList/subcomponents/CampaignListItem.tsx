@@ -147,7 +147,7 @@ const CampaignListItem: React.FC<CampaignListItemProps> = ({ campaign }) => {
           </MenuButton>
           <MenuList>
             <MenuItem py={3} px={6}>
-              <Link to={urls.campaigns.edit(campaign._id)}>Edit Campaign</Link>
+              <Link to={urls.campaigns.update(campaign._id)}>Edit Campaign</Link>
             </MenuItem>
             <MenuItem py={3} px={6} onClick={onOpen}>
               Delete Campaign

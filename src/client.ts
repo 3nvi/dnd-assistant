@@ -1,5 +1,6 @@
 import { ApolloClient, HttpLink, InMemoryCache, ApolloLink } from '@apollo/client';
 import { setContext } from 'apollo-link-context';
+import { Campaign, QueryCampaignArgs } from 'src/graphql/schema';
 
 const httpLink = new HttpLink({
   uri: 'http://localhost:4000/',
@@ -20,7 +21,20 @@ const createAuthLink = (getAccessToken: () => Promise<string>) =>
     };
   }) as unknown) as ApolloLink;
 
-const cache = new InMemoryCache();
+const cache = new InMemoryCache({
+  typePolicies: {
+    Query: {
+      fields: {
+        campaign: (existing, { args, toReference }) =>
+          existing ||
+          toReference({
+            __typename: 'Campaign',
+            _id: (args as QueryCampaignArgs).id,
+          } as Pick<Campaign, '__typename' | '_id'>),
+      },
+    },
+  },
+});
 
 const createApolloClient = (getAccessToken: () => Promise<string>) => {
   const authLink = createAuthLink(getAccessToken);

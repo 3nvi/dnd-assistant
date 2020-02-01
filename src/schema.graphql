@@ -33,16 +33,25 @@ type CampaignDeletionResponse implements MutationResponse {
   success: Boolean!
 }
 
+type CampaignUpdateResponse implements MutationResponse {
+  campaign: Campaign
+  code: String!
+  message: String!
+  success: Boolean!
+}
+
 type Mutation {
   createCampaign(
     dungeonMaster: String!
     name: String!
-    players: [String]!
+    players: [String!]!
   ): CampaignCreationResponse!
   deleteCampaign(id: ID!): CampaignDeletionResponse!
+  updateCampaign(id: ID!, name: String, players: [String!]): CampaignCreationResponse!
 }
 
 type Query {
+  campaign(id: ID!): Campaign
   campaigns: [Campaign!]!
   users: [User!]!
 }

@@ -40,16 +40,31 @@ export type CampaignDeletionResponse = MutationResponse & {
   message: Scalars['String'];
 };
 
+export type CampaignUpdateResponse = MutationResponse & {
+  __typename?: 'CampaignUpdateResponse';
+  code: Scalars['String'];
+  success: Scalars['Boolean'];
+  message: Scalars['String'];
+  campaign?: Maybe<Campaign>;
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   createCampaign: CampaignCreationResponse;
+  updateCampaign: CampaignCreationResponse;
   deleteCampaign: CampaignDeletionResponse;
 };
 
 export type MutationCreateCampaignArgs = {
   name: Scalars['String'];
   dungeonMaster: Scalars['String'];
-  players: Array<Maybe<Scalars['String']>>;
+  players: Array<Scalars['String']>;
+};
+
+export type MutationUpdateCampaignArgs = {
+  id: Scalars['ID'];
+  name?: Maybe<Scalars['String']>;
+  players?: Maybe<Array<Scalars['String']>>;
 };
 
 export type MutationDeleteCampaignArgs = {
@@ -64,8 +79,13 @@ export type MutationResponse = {
 
 export type Query = {
   __typename?: 'Query';
+  campaign?: Maybe<Campaign>;
   campaigns: Array<Campaign>;
   users: Array<User>;
+};
+
+export type QueryCampaignArgs = {
+  id: Scalars['ID'];
 };
 
 export type User = {

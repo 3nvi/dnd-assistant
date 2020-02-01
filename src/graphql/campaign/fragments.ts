@@ -7,6 +7,7 @@ export const CAMPAIGN_SUMMARY_FRAGMENT = gql`
     createdAt
     updatedAt
     dungeonMaster {
+      _id
       name
     }
     players {

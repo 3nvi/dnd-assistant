@@ -3,7 +3,7 @@ const urls = {
     new: () => `/campaigns/new/`,
     list: () => `/campaigns/`,
     get: (id: string) => `/campaigns/${id}/`,
-    edit: (id: string) => `/campaigns/${id}/edit`,
+    update: (id: string) => `/campaigns/${id}/edit/`,
   },
 };
 

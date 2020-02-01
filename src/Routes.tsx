@@ -8,6 +8,8 @@ import HomePage from './pages/Home';
 import CampaignCreationPage from './pages/CampaignCreation';
 import SplashScreenPage from './pages/Splash';
 import CampaignListPage from './pages/CampaignList';
+import CampaignDetailsPage from './pages/CampaignDetails';
+import CampaignUpdatePage from './pages/CampaignUpdate';
 import withAuthentication from './hoc/withAuthentication';
 import urls from './urls';
 
@@ -25,6 +27,16 @@ const Routes: React.FC = () => {
           exact
           path={urls.campaigns.new()}
           component={withAuthentication(CampaignCreationPage)}
+        />
+        <Route
+          exact
+          path={urls.campaigns.update(':id')}
+          component={withAuthentication(CampaignUpdatePage)}
+        />
+        <Route
+          exact
+          path={urls.campaigns.get(':id')}
+          component={withAuthentication(CampaignDetailsPage)}
         />
         <Route
           exact
