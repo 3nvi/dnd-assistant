@@ -30,6 +30,7 @@ export const UPDATE_CAMPAIGN = gql`
       campaign {
         ...CampaignSummary
       }
+      message
     }
   }
   ${CAMPAIGN_SUMMARY_FRAGMENT}
@@ -82,6 +83,13 @@ const CampaignUpdatePage: React.FC = () => {
 
   React.useEffect(() => {
     if (updateCampaignData) {
+      toast({
+        title: updateCampaignData.updateCampaign.message,
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      });
+
       history.push(urls.campaigns.list());
     }
   }, [updateCampaignData]);
