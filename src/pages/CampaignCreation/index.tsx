@@ -2,14 +2,14 @@ import React from 'react';
 import CampaignForm from 'src/forms/CampaignForm';
 import DragonImg from 'src/assets/dragon.png';
 import { Box, Flex, Heading, Image, useToast } from '@chakra-ui/core/dist';
-import { useHistory } from 'react-router';
+import { useHistory } from 'react-router-dom';
 import { gql, useMutation } from '@apollo/client';
 import { CampaignCreationResponse, MutationCreateCampaignArgs } from 'src/graphql/schema';
 import urls from 'src/urls';
 import { CAMPAIGN_SUMMARY_FRAGMENT } from 'src/graphql/campaign';
 
 export const CREATE_CAMPAIGN = gql`
-  mutation CreateCampaign($name: String!, $dungeonMaster: String!, $players: [String]!) {
+  mutation CreateCampaign($name: String!, $dungeonMaster: String!, $players: [String!]!) {
     createCampaign(name: $name, dungeonMaster: $dungeonMaster, players: $players) {
       campaign {
         ...CampaignSummary
