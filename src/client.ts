@@ -30,7 +30,7 @@ const cache = new InMemoryCache({
           toReference({
             __typename: 'Campaign',
             _id: (args as QueryCampaignArgs).id,
-          } as Pick<Campaign, '__typename' | '_id'>),
+          } as Partial<Campaign>),
       },
     },
   },
