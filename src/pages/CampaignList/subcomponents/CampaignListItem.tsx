@@ -24,35 +24,22 @@ import {
 import { Link } from 'react-router-dom';
 import urls from 'src/urls';
 import { formatDatetime, isRecent } from 'src/utils/time';
+import { CampaignSummary } from 'src/graphql/fragments/campaignSummary.generated';
+import { useDeleteCampaign } from '../../../graphql/campaign/deleteCampaign.generated';
 import {
-  Campaign,
-  CampaignDeletionResponse,
-  MutationDeleteCampaignArgs,
-  Query,
-} from 'src/graphql/schema';
-import { gql, useMutation, defaultDataIdFromObject } from '@apollo/client';
-import { LIST_CAMPAIGNS } from '../index';
-
-export const DELETE_CAMPAIGN = gql`
-  mutation DeleteCampaign($id: ID!) {
-    deleteCampaign(id: $id) {
-      message
-    }
-  }
-`;
+  ListCampaigns,
+  ListCampaignsDocument,
+} from '../../../graphql/campaign/listCampaigns.generated';
 
 interface CampaignListItemProps {
-  campaign: Campaign;
+  campaign: CampaignSummary;
 }
 
 const CampaignListItem: React.FC<CampaignListItemProps> = ({ campaign }) => {
   const toast = useToast();
   const { isOpen, onClose, onOpen } = useDisclosure();
 
-  const [deleteCampaign, { data, loading, error }] = useMutation<
-    { deleteCampaign: CampaignDeletionResponse },
-    MutationDeleteCampaignArgs
-  >(DELETE_CAMPAIGN, {
+  const [deleteCampaign, { loading }] = useDeleteCampaign({
     variables: {
       id: campaign._id,
     },
@@ -64,10 +51,12 @@ const CampaignListItem: React.FC<CampaignListItemProps> = ({ campaign }) => {
       },
     }),
     update: cache => {
-      const { campaigns } = cache.readQuery<Pick<Query, 'campaigns'>>({ query: LIST_CAMPAIGNS })!;
-      cache.writeQuery({
-        query: LIST_CAMPAIGNS,
-        data: { campaigns: campaigns.filter(c => c._id !== campaign._id) },
+      const { listCampaignSummaries } = cache.readQuery<ListCampaigns>({
+        query: ListCampaignsDocument,
+      })!;
+      cache.writeQuery<ListCampaigns>({
+        query: ListCampaignsDocument,
+        data: { listCampaignSummaries: listCampaignSummaries.filter(c => c._id !== campaign._id) },
       });
     },
     onCompleted: data => {
@@ -78,19 +67,15 @@ const CampaignListItem: React.FC<CampaignListItemProps> = ({ campaign }) => {
         isClosable: true,
       });
     },
-  });
-
-  React.useEffect(() => {
-    if (error) {
+    onError: error =>
       toast({
         title: 'Failed to create campaign',
         description: error.message,
         status: 'error',
         duration: 3000,
         isClosable: true,
-      });
-    }
-  }, [error]);
+      }),
+  });
 
   return (
     <Grid templateColumns="repeat(5, 1fr)" gap={6}>

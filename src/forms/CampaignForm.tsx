@@ -12,18 +12,8 @@ import {
   useToast,
 } from '@chakra-ui/core/dist';
 import * as Yup from 'yup';
-import { useQuery, gql } from '@apollo/client';
-import { USER_SUMMARY_FRAGMENT } from 'src/graphql/user';
-import { MutationCreateCampaignArgs, Query } from 'src/graphql/schema';
-
-export const LIST_USERS = gql`
-  query ListUsers {
-    users {
-      ...UserSummary
-    }
-  }
-  ${USER_SUMMARY_FRAGMENT}
-`;
+import { MutationCreateCampaignArgs } from 'src/graphql/schema';
+import { useListUsers } from '../graphql/user/listUsers.generated';
 
 const CampaignFormSchema = Yup.object().shape({
   name: Yup.string()
@@ -43,21 +33,18 @@ interface CampaignFormProps {
 
 const CampaignForm: React.FC<CampaignFormProps> = ({ onSubmit, initialValues }) => {
   const toast = useToast();
-  const { data: listUsersData, error: listUsersError } = useQuery<Pick<Query, 'users'>>(LIST_USERS);
-
-  React.useEffect(() => {
-    if (listUsersError) {
+  const { data } = useListUsers({
+    onError: () =>
       toast({
         title: 'Failed to fetch user options',
         description: "We couldn't retrieve the DnD assistant users from our database",
         status: 'error',
         duration: 3000,
         isClosable: true,
-      });
-    }
-  }, [listUsersError]);
+      }),
+  });
 
-  const users = listUsersData?.users || [];
+  const users = data?.listUserSummaries || [];
   const userOptions = React.useMemo(
     () => users.map(user => ({ label: user.name, value: user._id })),
     [users]

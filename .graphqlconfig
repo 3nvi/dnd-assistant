@@ -1,6 +1,6 @@
 {
   "name": "DnD Assistant server",
-  "schemaPath": "./src/schema.graphql",
+  "schemaPath": "./src/graphql/schema.graphql",
   "extensions": {
     "endpoints": {
       "dnd-assistant-apollo-server": {

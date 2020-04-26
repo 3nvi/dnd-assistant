@@ -4,3 +4,24 @@ generates:
   src/graphql/schema.ts:
     plugins:
       - typescript
+
+  src/graphql:
+    documents: src/**/*.graphql
+    preset: near-operation-file
+    presetConfig:
+      baseTypesPath: ./schema.ts
+    plugins:
+      - typescript-operations:
+      - typescript-react-apollo:
+      - add: /* eslint-disable import/order, import/no-duplicates, @typescript-eslint/no-unused-vars */
+    config:
+      apolloReactHooksImportFrom: @apollo/client
+      apolloReactCommonImportFrom: @apollo/client
+      withComponent: false
+      withHOC: false
+      withHooks: true
+      skipTypename: true
+      omitOperationSuffix: true
+hooks:
+  afterAllFileWrite:
+    - prettier --write

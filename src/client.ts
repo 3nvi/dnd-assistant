@@ -1,6 +1,6 @@
 import { ApolloClient, HttpLink, InMemoryCache, ApolloLink } from '@apollo/client';
 import { setContext } from 'apollo-link-context';
-import { Campaign, QueryCampaignArgs } from 'src/graphql/schema';
+import { Campaign, QueryGetCampaignDetailsArgs } from 'src/graphql/schema';
 
 const httpLink = new HttpLink({
   uri: 'http://localhost:4000/',
@@ -29,7 +29,7 @@ const cache = new InMemoryCache({
           existing ||
           toReference({
             __typename: 'Campaign',
-            _id: (args as QueryCampaignArgs).id,
+            _id: (args as QueryGetCampaignDetailsArgs).id,
           } as Partial<Campaign>),
       },
     },

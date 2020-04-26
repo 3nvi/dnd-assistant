@@ -6,7 +6,9 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
+  /** Date scalar type */
   Date: any;
+  /** The `Upload` scalar type represents a file upload. */
   Upload: any;
 };
 
@@ -50,6 +52,7 @@ export type CampaignUpdateResponse = MutationResponse & {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  _placeholder?: Maybe<Scalars['String']>;
   createCampaign: CampaignCreationResponse;
   updateCampaign: CampaignCreationResponse;
   deleteCampaign: CampaignDeletionResponse;
@@ -79,12 +82,13 @@ export type MutationResponse = {
 
 export type Query = {
   __typename?: 'Query';
-  campaign?: Maybe<Campaign>;
-  campaigns: Array<Campaign>;
-  users: Array<User>;
+  _placeholder?: Maybe<Scalars['String']>;
+  listUserSummaries: Array<User>;
+  getCampaignDetails?: Maybe<Campaign>;
+  listCampaignSummaries: Array<Campaign>;
 };
 
-export type QueryCampaignArgs = {
+export type QueryGetCampaignDetailsArgs = {
   id: Scalars['ID'];
 };
 

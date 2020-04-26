@@ -1,110 +1,60 @@
 import React from 'react';
 import CampaignForm from 'src/forms/CampaignForm';
 import DragonImg from 'src/assets/dragon.png';
-import pick from 'lodash/pick';
 import { Box, Flex, Heading, Image, useToast } from '@chakra-ui/core/dist';
-import { useHistory, useRouteMatch } from 'react-router-dom';
-import { gql, useMutation, useQuery } from '@apollo/client';
-import {
-  CampaignUpdateResponse,
-  MutationUpdateCampaignArgs,
-  Query,
-  QueryCampaignArgs,
-} from 'src/graphql/schema';
-import urls from 'src/urls';
-import { CAMPAIGN_SUMMARY_FRAGMENT } from 'src/graphql/campaign';
+import { useRouteMatch } from 'react-router-dom';
 import { campaignFormInitialValues } from '../CampaignCreation';
-
-export const GET_CAMPAIGN = gql`
-  query Campaign($id: ID!) {
-    campaign(id: $id) {
-      ...CampaignSummary
-    }
-  }
-  ${CAMPAIGN_SUMMARY_FRAGMENT}
-`;
-
-export const UPDATE_CAMPAIGN = gql`
-  mutation UpdateCampaign($id: ID!, $name: String!, $players: [String!]) {
-    updateCampaign(id: $id, name: $name, players: $players) {
-      campaign {
-        ...CampaignSummary
-      }
-      message
-    }
-  }
-  ${CAMPAIGN_SUMMARY_FRAGMENT}
-`;
+import { useGetCampaignSummary } from '../../graphql/campaign/getCampaignSummary.generated';
+import { useUpdateCampaign } from '../../graphql/campaign/updateCampaign.generated';
 
 const CampaignUpdatePage: React.FC = () => {
   const toast = useToast();
-  const history = useHistory();
   const {
     params: { id },
   } = useRouteMatch<{ id: string }>();
 
-  const { data: campaignData, error: campaignFetchError } = useQuery<
-    Pick<Query, 'campaign'>,
-    QueryCampaignArgs
-  >(GET_CAMPAIGN, {
+  const { data } = useGetCampaignSummary({
     variables: {
       id,
     },
-  });
-
-  const [updateCampaign, { data: updateCampaignData, error: updateCampaignError }] = useMutation<
-    { updateCampaign: CampaignUpdateResponse },
-    MutationUpdateCampaignArgs
-  >(UPDATE_CAMPAIGN);
-
-  React.useEffect(() => {
-    if (campaignFetchError) {
+    onError: () =>
       toast({
         title: 'Failed to fetch stored campaign',
-        description: campaignFetchError.message,
         status: 'error',
         duration: 3000,
         isClosable: true,
-      });
-    }
-  }, [campaignFetchError]);
+      }),
+  });
 
-  React.useEffect(() => {
-    if (updateCampaignError) {
+  const [updateCampaign] = useUpdateCampaign({
+    onCompleted: data =>
       toast({
-        title: 'Failed to update campaign',
-        description: updateCampaignError.message,
-        status: 'error',
-        duration: 3000,
-        isClosable: true,
-      });
-    }
-  }, [updateCampaignError]);
-
-  React.useEffect(() => {
-    if (updateCampaignData) {
-      toast({
-        title: updateCampaignData.updateCampaign.message,
+        title: data.updateCampaign.message,
         status: 'success',
         duration: 3000,
         isClosable: true,
-      });
-
-      history.push(urls.campaigns.list());
-    }
-  }, [updateCampaignData]);
+      }),
+    onError: error =>
+      toast({
+        title: 'Failed to update campaign',
+        description: error.message,
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      }),
+  });
 
   const initialValues = React.useMemo(() => {
-    if (!campaignData || !campaignData.campaign) {
+    if (!data || !data.getCampaignDetails) {
       return campaignFormInitialValues;
     }
 
     return {
-      name: campaignData.campaign.name,
-      dungeonMaster: campaignData.campaign.dungeonMaster._id,
-      players: campaignData.campaign.players.map(player => player._id),
+      name: data.getCampaignDetails.name,
+      dungeonMaster: data.getCampaignDetails.dungeonMaster._id,
+      players: data.getCampaignDetails.players.map(player => player._id),
     };
-  }, [campaignData]);
+  }, [data]);
 
   return (
     <Flex justify="center" alignItems="center" minHeight="100%" direction={['column', 'row']}>

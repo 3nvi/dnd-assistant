@@ -1,0 +1,5 @@
+query GetCampaignSummary($id: ID!) {
+  getCampaignDetails(id: $id) {
+    ...CampaignSummary
+  }
+}

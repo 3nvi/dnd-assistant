@@ -1,0 +1,5 @@
+mutation DeleteCampaign($id: ID!) {
+  deleteCampaign(id: $id) {
+    message
+  }
+}

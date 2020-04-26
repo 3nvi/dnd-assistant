@@ -1,25 +1,14 @@
 import React from 'react';
-import { gql, useQuery } from '@apollo/client';
 import { ReactComponent as WarningIllustration } from 'src/assets/warning-illustration.svg';
 import { ReactComponent as EmptyIllustration } from 'src/assets/empty-box-illustration.svg';
-import { CAMPAIGN_SUMMARY_FRAGMENT } from 'src/graphql/campaign';
-import { Query } from 'src/graphql/schema';
 import { Box, Button, Flex, Heading, Spinner, Text } from '@chakra-ui/core/dist';
 import { Link } from 'react-router-dom';
 import urls from 'src/urls';
 import CampaignListItem from './subcomponents/CampaignListItem';
-
-export const LIST_CAMPAIGNS = gql`
-  query ListCampaigns {
-    campaigns {
-      ...CampaignSummary
-    }
-  }
-  ${CAMPAIGN_SUMMARY_FRAGMENT}
-`;
+import { useListCampaigns } from '../../graphql/campaign/listCampaigns.generated';
 
 const CampaignListPage: React.FC = () => {
-  const { data, loading, error } = useQuery<Pick<Query, 'campaigns'>>(LIST_CAMPAIGNS);
+  const { data, loading, error } = useListCampaigns();
 
   if (loading) {
     return (
@@ -33,7 +22,7 @@ const CampaignListPage: React.FC = () => {
     return <WarningIllustration />;
   }
 
-  if (!data?.campaigns.length) {
+  if (!data?.listCampaignSummaries.length) {
     return (
       <Flex align="center" justify="center">
         <EmptyIllustration width={400} />
@@ -67,7 +56,7 @@ const CampaignListPage: React.FC = () => {
           Campaigns
         </Heading>
       </Box>
-      {data.campaigns.map(campaign => (
+      {data?.listCampaignSummaries.map(campaign => (
         <Box as="li" borderBottom="1px" borderBottomColor="gray.100" p={5} key={campaign._id}>
           <CampaignListItem campaign={campaign} />
         </Box>

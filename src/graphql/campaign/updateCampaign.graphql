@@ -1,0 +1,8 @@
+mutation UpdateCampaign($id: ID!, $name: String!, $players: [String!]) {
+  updateCampaign(id: $id, name: $name, players: $players) {
+    campaign {
+      ...CampaignSummary
+    }
+    message
+  }
+}

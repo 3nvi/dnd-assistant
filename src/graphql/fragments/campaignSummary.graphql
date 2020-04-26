@@ -1,0 +1,14 @@
+fragment CampaignSummary on Campaign {
+  _id
+  name
+  createdAt
+  updatedAt
+  dungeonMaster {
+    _id
+    name
+  }
+  players {
+    _id
+    name
+  }
+}

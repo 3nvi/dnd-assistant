@@ -1,0 +1,6 @@
+fragment UserSummary on User {
+  _id
+  name
+  email
+  image
+}
